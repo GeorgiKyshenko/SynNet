@@ -28,10 +28,49 @@ OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 QUERY_LOG_FILE = "logs/user_queries.log"
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
-chain = None
-vector_db = None
-embedding_model = None
-chat_model = None
+# df = pd.read_csv("datasets/reviews.csv.")
+# reviews_docs = [Document(page_content=text) for text in df['review']]
+
+# loader = DirectoryLoader(
+#     path="datasets",
+#     glob="**/*.md",
+#     loader_cls=TextLoader,
+#     loader_kwargs={'encoding': 'utf-8'}
+# )
+# documents = loader.load()
+
+# text_splitter = RecursiveCharacterTextSplitter(
+#     chunk_size=1000,
+#     chunk_overlap=100,
+# )
+# docs = text_splitter.split_documents(documents)
+
+model_name = "sentence-transformers/all-mpnet-base-v2"
+embedding_model = HuggingFaceEmbeddings(model_name=model_name)
+
+vector_db = Chroma(
+    persist_directory="chroma_db/chroma_db_mpnet",
+    embedding_function=embedding_model,
+    collection_name="portfolio_collection"
+)
+# this code creates and loads Chroma on every run of the app.py file, now the logic of creation is in another file and the code above
+# loads it directly without creating it on every run of the script!
+
+# vector_db = Chroma.from_documents(
+#     documents=docs,
+#     embedding=embedding_model,
+#     persist_directory="chroma_db/chroma_db_mpnet",
+#     collection_name="portfolio_collection"
+# )
+
+chat_model = ChatGoogleGenerativeAI(
+    model="gemini-2.5-flash", temperature=0, google_api_key=GOOGLE_API_KEY)
+
+# chat_model = ChatOpenAI(
+#     openai_api_base=OPENROUTER_BASE_URL,
+#     openai_api_key=OPENROUTER_API_KEY,
+#     model=LLM_MODEL_NAME,
+#     temperature=0.1)
 
 instruction_str = """
 You are a personal assistant that speaks on behalf of me, as if you are my friend who knows me well. Although we are friends, dont refer to me as "My friend" in this scenario
@@ -48,52 +87,30 @@ If the context does not contain the answer, clearly state that you don’t know.
 Context: {context}
 """
 
+system_prompt = SystemMessagePromptTemplate(
+    prompt=PromptTemplate(
+        input_variables=['context'], template=instruction_str)
+)
 
-def load_chain():
-    global chain, vector_db, embedding_model, chat_model
+human_prompt = HumanMessagePromptTemplate(
+    prompt=PromptTemplate(input_variables=['question'], template="{question}")
+)
 
-    if chain is not None:
-        return chain
+messages = [system_prompt, human_prompt]
 
-    model_name = "sentence-transformers/all-mpnet-base-v2"
-    embedding_model = HuggingFaceEmbeddings(model_name=model_name)
+prompt_template = ChatPromptTemplate(
+    input_variables=["context", "question"],
+    messages=messages,
+)
 
-    vector_db = Chroma(
-        persist_directory="chroma_db/chroma_db_mpnet",
-        embedding_function=embedding_model,
-        collection_name="portfolio_collection"
-    )
+retriever = vector_db.as_retriever(k=10)
 
-    chat_model = ChatGoogleGenerativeAI(
-        model="gemini-2.5-flash", temperature=0, google_api_key=os.getenv("GOOGLE_API_KEY")
-    )
-
-    retriever = vector_db.as_retriever(k=10)
-
-    system_prompt = SystemMessagePromptTemplate(
-        prompt=PromptTemplate(
-            input_variables=['context'], template=instruction_str)
-    )
-
-    human_prompt = HumanMessagePromptTemplate(
-        prompt=PromptTemplate(
-            input_variables=['question'], template="{question}")
-    )
-
-    messages = [system_prompt, human_prompt]
-    prompt_template = ChatPromptTemplate(
-        input_variables=["context", "question"],
-        messages=messages,
-    )
-
-    chain = (
-        {"context": retriever, "question": RunnablePassthrough()}
-        | prompt_template
-        | chat_model
-        | StrOutputParser()
-    )
-
-    return chain
+chain = (
+    {"context": retriever, "question": RunnablePassthrough()}
+    | prompt_template
+    | chat_model
+    | StrOutputParser()
+)
 
 
 @app.errorhandler(404)
@@ -201,101 +218,13 @@ def chatbot_api():
 
     log_user_query(user_query)
 
-    chain_instance = load_chain()
-
-    answer = chain_instance.invoke(user_query)
-
-    # answer = chain.invoke(user_query)
+    answer = chain.invoke(user_query)
 
     log_chatbot_answer(answer)
 
     return jsonify({'response': answer})
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
-
-
-# df = pd.read_csv("datasets/reviews.csv.")
-# reviews_docs = [Document(page_content=text) for text in df['review']]
-
-# loader = DirectoryLoader(
-#     path="datasets",
-#     glob="**/*.md",
-#     loader_cls=TextLoader,
-#     loader_kwargs={'encoding': 'utf-8'}
-# )
-# documents = loader.load()
-
-# text_splitter = RecursiveCharacterTextSplitter(
-#     chunk_size=1000,
-#     chunk_overlap=100,
-# )
-# docs = text_splitter.split_documents(documents)
-
-# model_name = "sentence-transformers/all-mpnet-base-v2"
-# embedding_model = HuggingFaceEmbeddings(model_name=model_name)
-
-# vector_db = Chroma(
-#     persist_directory="chroma_db/chroma_db_mpnet",
-#     embedding_function=embedding_model,
-#     collection_name="portfolio_collection"
-# )
-# this code creates and loads Chroma on every run of the app.py file, now the logic of creation is in another file and the code above
-# loads it directly without creating it on every run of the script!
-
-# vector_db = Chroma.from_documents(
-#     documents=docs,
-#     embedding=embedding_model,
-#     persist_directory="chroma_db/chroma_db_mpnet",
-#     collection_name="portfolio_collection"
-# )
-
-# chat_model = ChatGoogleGenerativeAI(
-#     model="gemini-2.5-flash", temperature=0, google_api_key=GOOGLE_API_KEY)
-
-# chat_model = ChatOpenAI(
-#     openai_api_base=OPENROUTER_BASE_URL,
-#     openai_api_key=OPENROUTER_API_KEY,
-#     model=LLM_MODEL_NAME,
-#     temperature=0.1)
-
-# instruction_str = """
-# You are a personal assistant that speaks on behalf of me, as if you are my friend who knows me well. Although we are friends, dont refer to me as "My friend" in this scenario
-# you are my assistant. Answer all questions as though you are representing me directly.
-# Don't use technical terms in your answer related to the instruction i gave you. Do not use "Oh" consistently.
-# When speaking on behalf of me, always refer to me as “him”.
-# Never use “they” or any gender-neutral pronoun when referring to the user.
-# Use only masculine pronouns: he, him, his. Dont start any conversations other than answering questions about me and dont ask any question!
-# You can close the conversation politely without asking extra question!
-
-# Your tone should be friendly and personal, but not overly emotional.
-# If the context does not contain the answer, clearly state that you don’t know.
-
-# Context: {context}
-# """
-
-# system_prompt = SystemMessagePromptTemplate(
-#     prompt=PromptTemplate(
-#         input_variables=['context'], template=instruction_str)
-# )
-
-# human_prompt = HumanMessagePromptTemplate(
-#     prompt=PromptTemplate(input_variables=['question'], template="{question}")
-# )
-
-# messages = [system_prompt, human_prompt]
-
-# prompt_template = ChatPromptTemplate(
-#     input_variables=["context", "question"],
-#     messages=messages,
-# )
-
-# retriever = vector_db.as_retriever(k=10)
-
-# chain = (
-#     {"context": retriever, "question": RunnablePassthrough()}
-#     | prompt_template
-#     | chat_model
-#     | StrOutputParser()
-# )
+# if __name__ == '__main__':
+    # app.run(debug=True)
+    # port = int(os.environ.get('PORT', 5000))

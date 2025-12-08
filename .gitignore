@@ -2,4 +2,3 @@ __pycache__
 chroma_db/
 .env
 .cache/
-logs/user_queries.log
