@@ -18,6 +18,8 @@ from langchain_openai import ChatOpenAI
 import datetime
 from dotenv import load_dotenv
 import os
+import gc
+import torch
 
 app = Flask(__name__)
 load_dotenv()
@@ -28,49 +30,11 @@ OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 QUERY_LOG_FILE = "logs/user_queries.log"
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
-# df = pd.read_csv("datasets/reviews.csv.")
-# reviews_docs = [Document(page_content=text) for text in df['review']]
+chain = None
+vector_db = None
+embedding_model = None
+chat_model = None
 
-# loader = DirectoryLoader(
-#     path="datasets",
-#     glob="**/*.md",
-#     loader_cls=TextLoader,
-#     loader_kwargs={'encoding': 'utf-8'}
-# )
-# documents = loader.load()
-
-# text_splitter = RecursiveCharacterTextSplitter(
-#     chunk_size=1000,
-#     chunk_overlap=100,
-# )
-# docs = text_splitter.split_documents(documents)
-
-model_name = "sentence-transformers/all-mpnet-base-v2"
-embedding_model = HuggingFaceEmbeddings(model_name=model_name)
-
-vector_db = Chroma(
-    persist_directory="chroma_db/chroma_db_mpnet",
-    embedding_function=embedding_model,
-    collection_name="portfolio_collection"
-)
-# this code creates and loads Chroma on every run of the app.py file, now the logic of creation is in another file and the code above
-# loads it directly without creating it on every run of the script!
-
-# vector_db = Chroma.from_documents(
-#     documents=docs,
-#     embedding=embedding_model,
-#     persist_directory="chroma_db/chroma_db_mpnet",
-#     collection_name="portfolio_collection"
-# )
-
-chat_model = ChatGoogleGenerativeAI(
-    model="gemini-2.5-flash", temperature=0, google_api_key=GOOGLE_API_KEY)
-
-# chat_model = ChatOpenAI(
-#     openai_api_base=OPENROUTER_BASE_URL,
-#     openai_api_key=OPENROUTER_API_KEY,
-#     model=LLM_MODEL_NAME,
-#     temperature=0.1)
 
 instruction_str = """
 You are a personal assistant that speaks on behalf of me, as if you are my friend who knows me well. Although we are friends, dont refer to me as "My friend" in this scenario
@@ -87,30 +51,52 @@ If the context does not contain the answer, clearly state that you don’t know.
 Context: {context}
 """
 
-system_prompt = SystemMessagePromptTemplate(
-    prompt=PromptTemplate(
-        input_variables=['context'], template=instruction_str)
-)
 
-human_prompt = HumanMessagePromptTemplate(
-    prompt=PromptTemplate(input_variables=['question'], template="{question}")
-)
+def load_chain():
+    global chain, vector_db, embedding_model, chat_model
 
-messages = [system_prompt, human_prompt]
+    if chain is not None:
+        return chain
 
-prompt_template = ChatPromptTemplate(
-    input_variables=["context", "question"],
-    messages=messages,
-)
+    model_name = "sentence-transformers/all-mpnet-base-v2"
+    embedding_model = HuggingFaceEmbeddings(model_name=model_name)
 
-retriever = vector_db.as_retriever(k=10)
+    vector_db = Chroma(
+        persist_directory="chroma_db/chroma_db_mpnet",
+        embedding_function=embedding_model,
+        collection_name="portfolio_collection"
+    )
 
-chain = (
-    {"context": retriever, "question": RunnablePassthrough()}
-    | prompt_template
-    | chat_model
-    | StrOutputParser()
-)
+    chat_model = ChatGoogleGenerativeAI(
+        model="gemini-2.5-flash", temperature=0, google_api_key=os.getenv("GOOGLE_API_KEY")
+    )
+
+    retriever = vector_db.as_retriever(k=10)
+
+    system_prompt = SystemMessagePromptTemplate(
+        prompt=PromptTemplate(
+            input_variables=['context'], template=instruction_str)
+    )
+
+    human_prompt = HumanMessagePromptTemplate(
+        prompt=PromptTemplate(
+            input_variables=['question'], template="{question}")
+    )
+
+    messages = [system_prompt, human_prompt]
+    prompt_template = ChatPromptTemplate(
+        input_variables=["context", "question"],
+        messages=messages,
+    )
+
+    chain = (
+        {"context": retriever, "question": RunnablePassthrough()}
+        | prompt_template
+        | chat_model
+        | StrOutputParser()
+    )
+
+    return chain
 
 
 @app.errorhandler(404)
@@ -218,7 +204,13 @@ def chatbot_api():
 
     log_user_query(user_query)
 
-    answer = chain.invoke(user_query)
+    chain_instance = load_chain()
+
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+    gc.collect()
+
+    answer = chain_instance.invoke(user_query)
 
     log_chatbot_answer(answer)
 
@@ -226,5 +218,4 @@ def chatbot_api():
 
 
 # if __name__ == '__main__':
-    # app.run(debug=True)
-    # port = int(os.environ.get('PORT', 5000))
+#     app.run(debug=True)
