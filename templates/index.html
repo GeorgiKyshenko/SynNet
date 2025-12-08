@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Syn Net</title>
+      <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}?v=12" />
+      <script src="https://cdn.tailwindcss.com"></script>
+       <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      <script id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+      <script src="https://unpkg.com/lucide@latest"></script>
+
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    </head>
+  </head>
+  <body class="antialiased">
+    <header class="sticky top-0 z-50 bg-[#161b22] header-shadow border-b border-[#30363d]">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+        <div class="text-2xl font-bold text-white flex items-center"><i data-lucide="brain-circuit" class="w-6 h-6 text-teal-400 mr-2"></i> Syn Net</div>
+        <nav class="hidden md:flex space-x-6">
+          <a href="#home" class="text-gray-300 hover:text-teal-400 transition duration-300">Home</a>
+          <a href="#ml-projects" class="text-gray-300 hover:text-teal-400 transition duration-300">Machine Learning</a>
+          <a href="#dl-projects" class="text-gray-300 hover:text-teal-400 transition duration-300">Deep Learning</a>
+          <a href="#ds-projects" class="text-gray-300 hover:text-teal-400 transition duration-300">Data Science</a>
+          <a href="#streamlit" class="text-gray-300 hover:text-teal-400 transition duration-300">Streamlit Apps</a>
+          <a href="#certifications" class="text-gray-300 hover:text-teal-400 transition duration-300">Certifications</a>
+          <a href="#contact" class="text-gray-300 hover:text-teal-400 transition duration-300">Contact</a>
+        </nav>
+        <button id="menu-button" class="md:hidden text-gray-400 hover:text-teal-400 focus:outline-none">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+      <div id="mobile-menu" class="hidden md:hidden bg-[#161b22] border-t border-[#30363d]">
+        <nav class="flex flex-col space-y-3">
+          <a href="#home" onclick="closeMobileMenu()" class="text-gray-300 hover:text-teal-400 transition duration-300 block py-2">Home</a>
+          <a href="#ml-projects" onclick="closeMobileMenu()" class="text-gray-300 hover:text-teal-400 transition duration-300 block py-2">Machine Learning</a>
+          <a href="#dl-projects" onclick="closeMobileMenu()" class="text-gray-300 hover:text-teal-400 transition duration-300 block py-2">Deep Learning</a>
+          <a href="#ds-projects" onclick="closeMobileMenu()" class="text-gray-300 hover:text-teal-400 transition duration-300 block py-2">Data Science</a>
+
+          <a href="#streamlit" onclick="closeMobileMenu()" class="text-gray-300 hover:text-teal-400 transition duration-300 block py-2">Streamlit Apps</a>
+          <a href="#certifications" onclick="closeMobileMenu()" class="text-gray-300 hover:text-teal-400 transition duration-300 block py-2">Certifications</a>
+          <a href="#contact" onclick="closeMobileMenu()" class="text-gray-300 hover:text-teal-400 transition duration-300 block py-2">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="home" class="section-padding flex flex-col lg:flex-row items-center justify-between min-h-screen-minus-header">
+        <div class="lg:w-3/5 space-y-6">
+          <span class="text-teal-400 text-lg font-medium tracking-wider uppercase">Software Developer |</span>
+          <h1 class="text-5xl sm:text-7xl font-extrabold text-white leading-tight">Hi, I'm <span class="text-teal-400">Georgi</span>.</h1>
+          <p class="text-xl text-gray-400 max-w-2xl">Java developer with a strong focus on Machine Learning, Deep Learning, and Data Science. This portfolio showcases my projects, experiments, and practical work across ML and data-driven development. I enjoy building intelligent models, exploring complex datasets, and applying modern techniques to real-world problems. Feel free to explore my work.</p>
+
+          <div class="pt-4 space-y-3">
+            <h2 class="text-2xl font-semibold text-white">Education:</h2>
+            <!-- <p class="text-gray-400">
+              <i data-lucide="graduation-cap" class="inline-block w-5 h-5 mr-2 text-teal-400"></i>
+              Master of Science in Data Science - University of Advanced Analytics (2020)
+            </p> -->
+            <p class="text-gray-400">
+              <i data-lucide="school" class="inline-block w-5 h-5 mr-2 text-teal-400"></i>
+              High School Professional Degree in Computer Technology (2007 - 2011)
+            </p>
+            <p class="text-gray-400">
+              <i data-lucide="book-open" class="inline-block w-5 h-5 mr-2 text-teal-400"></i>
+              Bachelor Degree in Chemical Engineering - Burgas State University (2025 - )
+            </p>
+            <h2 class="text-2xl font-semibold text-white">Professional Training:</h2>
+            <p class="text-gray-400">
+              <i data-lucide="monitor-cloud" class="inline-block w-5 h-5 mr-2 text-teal-400"></i>
+              Software Engineer with Java - Software University (2020 - 2022)
+            </p>
+            <p class="text-gray-400">
+              <i data-lucide="square-function" class="inline-block w-5 h-5 mr-2 text-teal-400"></i>
+              Physics and Mathematics - Sofia University/Faculty of Physics (2024 - 2026)
+            </p>
+          </div>
+
+          <a href="#ml-projects" class="inline-flex items-center mt-8 px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-lg text-white bg-teal-600 hover:bg-teal-700 transition duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 focus:ring-offset-[#0d1117]">
+            Explore My Projects
+            <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i>
+          </a>
+        </div>
+        <div class="lg:w-2/5 mt-12 lg:mt-0 p-8 flex justify-center">
+          <div class="w-64 h-64 bg-[#161b22] border-4 border-teal-400 rounded-full flex items-center justify-center shadow-2xl shadow-teal-700/30">
+            <i data-lucide="brain-circuit" class="w-24 h-24 text-teal-400"></i>
+          </div>
+        </div>
+      </section>
+
+      <section id="tech-stack" class="section-padding border-t border-[#30363d]">
+        <h2 class="text-4xl font-bold text-center text-white mb-12">My Technology Stack Proficiency</h2>
+
+        <div class="flex flex-wrap justify-center space-x-6 mb-12 max-w-4xl mx-auto">
+          <div class="text-center mt-4">
+            <i class="fab fa-python text-5xl text-blue-400"></i>
+            <p class="text-gray-400 text-sm mt-1">Python</p>
+          </div>
+
+          <div class="text-center mt-4">
+            <i class="fab fa-java text-5xl text-red-500"></i>
+            <p class="text-gray-400 text-sm mt-1">Java</p>
+          </div>
+          <div class="text-center mt-4">
+            <i class="fas fa-leaf text-5xl text-green-500"></i>
+            <p class="text-gray-400 text-sm mt-1">Spring</p>
+          </div>
+          <div class="text-center mt-4">
+            <i class="fab fa-angular text-5xl text-red-700"></i>
+            <p class="text-gray-400 text-sm mt-1">Angular</p>
+          </div>
+          <div class="text-center mt-4">
+            <i class="fas fa-database text-5xl text-teal-400"></i>
+            <p class="text-gray-400 text-sm mt-1">SQL</p>
+          </div>
+          <div class="text-center mt-4">
+            <i class="fab fa-aws text-5xl text-yellow-600"></i>
+            <p class="text-gray-400 text-sm mt-1">Cloud/Ops</p>
+          </div>
+          <div class="text-center mt-4">
+            <i class="fas fa-brain text-5xl text-pink-400"></i>
+            <p class="text-gray-400 text-sm mt-1">Deep Learning</p>
+          </div>
+          <div class="text-center mt-4">
+            <i class="fas fa-calculator text-5xl text-green-400"></i>
+            <p class="text-gray-400 text-sm mt-1">Math</p>
+          </div>
+        </div>
+        <div class="relative max-w-3xl mx-auto p-4 bg-[#161b22] border border-[#30363d] rounded-xl shadow-2xl">
+          <canvas id="skillChart" class="w-full"></canvas>
+        </div>
+      </section>
+
+      <section id="ml-projects" class="section-padding border-t border-[#30363d]">
+        <h2 class="text-4xl font-bold text-center text-white mb-12">Machine Learning Projects</h2>
+        <div id="ml-project-list" class="grid md:grid-cols-2 gap-8">
+          {% for project in portfolio_data['grouped_projects']['ML'] %}
+          <div class="p-6 bg-[#161b22] border border-[#30363d] rounded-xl shadow-xl space-y-4 project-item ml-item hover:border-teal-400 transition duration-300 transform hover:scale-[1.01]">
+            <h3 class="text-2xl font-semibold text-teal-400">{{ project.title }}</h3>
+            <p class="text-gray-400">{{ project.description }}</p>
+            <button onclick="openNotebookModal('{{ project.id }}')" class="project-button bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition duration-300">
+              <i data-lucide="notebook-pen" class="w-5 h-5 inline-block mr-2"></i>
+              {{ project.link_text }}
+            </button>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="text-center mt-10">
+          <button data-category="ml" class="load-more-btn px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-lg text-white bg-gray-700 hover:bg-gray-600 transition duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-[#0d1117]">
+            <i data-lucide="chevrons-down" class="w-5 h-5 inline-block mr-2"></i>
+            Load More
+          </button>
+          <button data-category="ml" class="show-less-btn hidden px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-lg text-white bg-gray-700 hover:bg-gray-600 transition duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-[#0d1117] ml-4">
+            <i data-lucide="chevrons-up" class="w-5 h-5 inline-block mr-2"></i>
+            Show Less
+          </button>
+        </div>
+      </section>
+
+      <hr class="border-[#30363d] my-4" />
+
+      <section id="dl-projects" class="section-padding border-t border-[#30363d]">
+        <h2 class="text-4xl font-bold text-center text-white mb-12">Deep Learning Projects</h2>
+        <div id="dl-project-list" class="grid md:grid-cols-2 gap-8">
+          {% for project in portfolio_data['grouped_projects']['DL'] %}
+          <div class="p-6 bg-[#161b22] border border-[#30363d] rounded-xl shadow-xl space-y-4 project-item dl-item hover:border-teal-400 transition duration-300 transform hover:scale-[1.01]">
+            <h3 class="text-2xl font-semibold text-teal-400">{{ project.title }}</h3>
+            <p class="text-gray-400">{{ project.description }}</p>
+            <button onclick="openNotebookModal('{{ project.id }}')" class="project-button bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition duration-300">
+              <i data-lucide="notebook-pen" class="w-5 h-5 inline-block mr-2"></i>
+              {{ project.link_text }}
+            </button>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="text-center mt-10">
+          <button data-category="dl" class="load-more-btn px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-lg text-white bg-gray-700 hover:bg-gray-600 transition duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-[#0d1117]">
+            <i data-lucide="chevrons-down" class="w-5 h-5 inline-block mr-2"></i>
+            Load More
+          </button>
+          <button data-category="dl" class="show-less-btn hidden px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-lg text-white bg-gray-700 hover:bg-gray-600 transition duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-[#0d1117] ml-4">
+            <i data-lucide="chevrons-up" class="w-5 h-5 inline-block mr-2"></i>
+            Show Less
+          </button>
+        </div>
+      </section>
+
+      <hr class="border-[#30363d] my-4" />
+
+      <section id="ds-projects" class="section-padding border-t border-[#30363d]">
+        <h2 class="text-4xl font-bold text-center text-white mb-12">Data Science Projects</h2>
+        <div id="ds-project-list" class="grid md:grid-cols-2 gap-8">
+          {% for project in portfolio_data['grouped_projects']['DS'] %}
+          <div class="p-6 bg-[#161b22] border border-[#30363d] rounded-xl shadow-xl space-y-4 project-item ds-item hover:border-teal-400 transition duration-300 transform hover:scale-[1.01]">
+            <h3 class="text-2xl font-semibold text-teal-400">{{ project.title }}</h3>
+            <p class="text-gray-400">{{ project.description }}</p>
+            <button onclick="openNotebookModal('{{ project.id }}')" class="project-button bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition duration-300">
+              <i data-lucide="notebook-pen" class="w-5 h-5 inline-block mr-2"></i>
+              {{ project.link_text }}
+            </button>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="text-center mt-10">
+          <button data-category="ds" class="load-more-btn px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-lg text-white bg-gray-700 hover:bg-gray-600 transition duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-[#0d1117]">
+            <i data-lucide="chevrons-down" class="w-5 h-5 inline-block mr-2"></i>
+            Load More
+          </button>
+          <button data-category="ds" class="show-less-btn hidden px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-lg text-white bg-gray-700 hover:bg-gray-600 transition duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-[#0d1117] ml-4">
+            <i data-lucide="chevrons-up" class="w-5 h-5 inline-block mr-2"></i>
+            Show Less
+          </button>
+        </div>
+      </section>
+
+      <hr class="border-[#30363d] my-4" />
+
+      <section id="streamlit" class="section-padding border-t border-[#30363d] relative">
+        <div class="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-10 rounded-xl backdrop-blur-sm pointer-events-none">
+          <div class="text-center p-8 bg-gray-800 bg-opacity-70 rounded-lg border border-teal-400">
+            <h3 class="text-6xl font-extrabold text-teal-400 mb-2">COMMING SOON</h3>
+            <p class="text-lg text-gray-300">Streamlit Interactive Models</p>
+          </div>
+        </div>
+
+        <h2 class="text-4xl font-bold text-center text-white mb-12">Streamlit Interactive Models</h2>
+        <p class="text-center text-gray-400 mb-8">Live, deployed data applications for user interaction and demonstration.</p>
+
+        <div class="grid md:grid-cols-2 gap-8">
+          {% for app in portfolio_data['streamlit'] %}
+          <!--Add this the properties to <a> below when the feature is ready (| - separating line)-->
+          <!-- href="{{ app.url }}" | hover:border-green-400 hover:bg-[#1f262e] transform hover:scale-[1.02] group-->
+          <a target="_blank" class="block p-6 bg-[#161b22] border border-[#30363d] rounded-xl shadow-xl transition duration-300">
+            <h3 class="text-2xl font-semibold text-green-400 group-hover:text-green-300">{{ app.title }}</h3>
+            <p class="text-gray-400 mt-2">{{ app.description }}</p>
+            <div class="mt-4 flex items-center text-sm text-green-400">
+              <i data-lucide="external-link" class="w-4 h-4 mr-2"></i>
+              Launch App
+            </div>
+          </a>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section id="certifications" class="section-padding border-t border-[#30363d]">
+        <h2 class="text-4xl font-bold text-center text-white mb-12">Certifications & Online Courses</h2>
+
+        <div id="cert-list" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {% for cert in portfolio_data['certifications'] %}
+          <div class="p-6 bg-[#161b22] border border-[#30363d] hover:border-teal-400 transition duration-300 rounded-xl shadow-xl cert-item flex flex-col justify-between">
+            <div class="mb-4">
+              <i data-lucide="award" class="w-8 h-8 text-yellow-500 mb-3"></i>
+            </div>
+
+            <div>
+              <!--  If certificate with long title needs two rows, scale the min height of the container             
+              <div class="min-h-24 flex items-start">
+                <h3 class="text-xl font-semibold text-gray-100 mb-2">{{ cert.title }}</h3>
+              </div> -->
+              <h3 class="text-xl font-semibold text-gray-100 mb-2">{{ cert.title }}</h3>
+
+              <p class="text-sm text-teal-400 flex items-center mb-1">
+                <i data-lucide="building-2" class="w-4 h-4 mr-2"></i>
+                {{ cert.issuer }}
+              </p>
+
+              <p class="text-gray-400 text-sm flex items-center mb-4">
+                <i data-lucide="calendar" class="w-4 h-4 mr-2"></i>
+                {{ cert.date }}
+              </p>
+
+              {% if cert.topics %}
+              <div class="pt-4 border-t border-[#30363d] mt-4 relative">
+                <button type="button" data-dropdown-toggle="topics-{{ loop.index }}" class="toggle-topics w-full text-left px-3 py-1 text-sm font-medium bg-gray-700 text-teal-300 rounded-lg hover:bg-gray-600 transition duration-200 flex justify-between items-center">
+                  Topics ({{ cert.topics | length }})
+                  <i data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300"></i>
+                </button>
+
+                <div id="topics-{{ loop.index }}" class="topics-dropdown absolute top-full left-0 mt-1 w-full bg-[#161b22] border border-teal-400 rounded-lg shadow-lg hidden z-30 p-2 max-h-40 overflow-y-auto">
+                  <div class="flex flex-wrap gap-2">
+                    {% for topic in cert.topics %}
+                    <span class="px-3 py-1 text-xs font-medium bg-gray-600 text-gray-200 rounded-full"> {{ topic }} </span>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="text-center mt-10">
+          <button id="load-more-cert-btn" class="px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-lg text-white bg-gray-700 hover:bg-gray-600 transition duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-[#0d1117]">
+            <i data-lucide="chevrons-down" class="w-5 h-5 inline-block mr-2"></i>
+            Load More
+          </button>
+          <button id="show-less-cert-btn" class="hidden px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-lg text-white bg-gray-700 hover:bg-gray-600 transition duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-[#0d1117] ml-4">
+            <i data-lucide="chevrons-up" class="w-5 h-5 inline-block mr-2"></i>
+            Show Less
+          </button>
+        </div>
+      </section>
+
+      <section id="contact" class="section-padding border-t border-[#30363d]">
+        <h2 class="text-4xl font-bold text-center text-white mb-12">Get In Touch</h2>
+        <div class="max-w-xl mx-auto space-y-6 text-center">
+          <p class="text-gray-400 text-lg">If you’d like to reach out, feel free to contact me through the platform or website where you discovered this page. I’m always open to new opportunities, collaborations, or questions about my work.</p>
+          <!-- <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-8 pt-4">
+            <p class="text-white text-xl">
+              <i data-lucide="mail" class="w-5 h-5 inline-block mr-2 text-teal-400"></i>
+              <a href="mailto:alex.synnet@email.com" class="hover:text-teal-400 transition duration-300">alex.synnet@email.com</a>
+            </p>
+            <p class="text-white text-xl">
+              <i data-lucide="linkedin" class="w-5 h-5 inline-block mr-2 text-teal-400"></i>
+              <a href="https://linkedin.com/in/yourprofile" target="_blank" class="hover:text-teal-400 transition duration-300">LinkedIn</a>
+            </p>
+            <p class="text-white text-xl">
+              <i data-lucide="github" class="w-5 h-5 inline-block mr-2 text-teal-400"></i>
+              <a href="https://github.com/yoursynnet" target="_blank" class="hover:text-teal-400 transition duration-300">GitHub</a>
+            </p>
+          </div> -->
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-[#161b22] border-t border-[#30363d] mt-12 py-6">
+      <div class="container mx-auto px-4 text-center text-gray-500">&copy; 2025 Syn-Net. All rights reserved.</div>
+    </footer>
+
+    <div id="notebook-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black bg-opacity-90 transition-opacity duration-300" onclick="closeNotebookModal(event)">
+      <div id="modal-content-container" class="relative w-full max-w-7xl max-h-[95vh] bg-[#0d1117] text-gray-400 rounded-xl shadow-2xl p-6 md:p-8 overflow-y-auto transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+        <button onclick="closeNotebookModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white transition duration-300 focus:outline-none">
+          <i data-lucide="x" class="w-8 h-8"></i>
+        </button>
+
+        <h2 id="modal-title" class="text-3xl font-bold text-teal-400 mb-4 border-b border-[#30363d] pb-2"></h2>
+
+        <div id="notebook-content-container" class="mt-4">
+          <p class="text-gray-400 text-lg mb-4">
+            <!-- <i data-lucide="info" class="w-5 h-5 inline-block mr-2"></i>
+            ** Content rendered using nbconvert with a light theme. ** -->
+          </p>
+
+          <div id="modal-loading" class="text-center py-12 hidden">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-400 mx-auto"></div>
+            <p class="mt-4 text-teal-400">Loading Notebook Content...</p>
+          </div>
+
+          <div id="notebook-content-html" class="notebook-render-area p-4 rounded-lg overflow-x-auto hidden"></div>
+        </div>
+      </div>
+    </div>
+    <div class="fixed bottom-6 right-6 z-50">
+      <div id="chat-bubble" class="absolute right-2 bottom-[75px] z-50 bg-white text-gray-800 p-3 rounded-xl shadow-xl w-max max-w-[200px] opacity-0 transition-opacity duration-500 pointer-events-none">
+        <p class="text-sm font-semibold">Hello!👋 I’m Georgi’s AI Assistant. Feel free to ask a question.</p>
+
+        <div class="absolute right-3 bottom-[-6px] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-white"></div>
+      </div>
+
+      <div id="chat-modal" class="hidden absolute bottom-[80px] right-0 z-50">
+        <div class="bg-[#161b22] border border-[#30363d] rounded-lg shadow-2xl w-full max-w-sm h-[60vh] flex flex-col">
+          <div class="p-4 border-b border-[#30363d] flex justify-between items-center">
+            <h3 class="text-xl font-bold text-white flex items-center">
+              <i data-lucide="bot" class="w-6 h-6 text-teal-400 mr-2"></i>
+              Petya
+            </h3>
+            <button id="chat-close-btn" class="text-gray-400 hover:text-white transition duration-200">
+              <i data-lucide="minus" class="w-5 h-5"></i>
+            </button>
+          </div>
+
+          <div id="chat-messages" class="flex-grow p-4 overflow-y-auto space-y-3">
+            <div class="flex justify-start">
+              <div class="bg-gray-700 text-white text-sm p-3 rounded-xl rounded-bl-none max-w-[80%]">Hello, I’m Petya, Georgi’s personal assistant. Ask me anything about him, and I’ll answer based on the information I’ve been given.</div>
+            </div>
+          </div>
+
+          <div class="p-4 border-t border-[#30363d] flex">
+            <input type="text" id="chat-input" placeholder="Ask a question..." class="flex-grow p-3 bg-gray-800 border border-gray-700 text-white rounded-l-lg focus:outline-none focus:border-teal-400" />
+            <button id="chat-send-btn" class="bg-teal-500 text-white p-3 rounded-r-lg hover:bg-teal-400 transition duration-200">
+              <i data-lucide="send" class="w-5 h-5"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <button id="chat-open-btn" class="p-4 bg-teal-500 rounded-full shadow-lg hover:bg-teal-400 transition duration-300 transform hover:scale-105">
+        <i data-lucide="message-square" class="w-6 h-6 text-white"></i>
+      </button>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>
