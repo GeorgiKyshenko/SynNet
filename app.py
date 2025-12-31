@@ -21,7 +21,6 @@ import datetime
 from dotenv import load_dotenv
 import os
 import gc
-import torch
 
 app = Flask(__name__)
 load_dotenv()
@@ -215,8 +214,6 @@ def chatbot_api():
 
     chain_instance = load_chain()
 
-    if torch.cuda.is_available():
-        torch.cuda.empty_cache()
     gc.collect()
 
     answer = chain_instance.invoke(user_query)
