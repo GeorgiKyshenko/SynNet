@@ -5,12 +5,11 @@ import nbformat
 import pandas as pd
 from data import portfolio_data
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_chroma import Chroma
+# from langchain_chroma import Chroma
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import DirectoryLoader, TextLoader
 from langchain_core.prompts import ChatPromptTemplate, PromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langchain_chroma import Chroma
 from langchain_community.docstore.document import Document
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.runnables import RunnablePassthrough
