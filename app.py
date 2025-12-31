@@ -14,6 +14,9 @@ from langchain_chroma import Chroma
 from langchain_community.docstore.document import Document
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.runnables import RunnablePassthrough
+from langchain_pinecone import PineconeVectorStore
+from langchain_huggingface import HuggingFaceEndpointEmbeddings
+
 from langchain_openai import ChatOpenAI
 import datetime
 from dotenv import load_dotenv
@@ -29,6 +32,7 @@ LLM_MODEL_NAME = 'mistralai/mixtral-8x7b-instruct'
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 QUERY_LOG_FILE = "logs/user_queries.log"
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+PINECONE_API = os.getenv("PINECONE_API")
 
 chain = None
 vector_db = None
@@ -58,13 +62,20 @@ def load_chain():
         return chain
 
     model_name = "sentence-transformers/all-mpnet-base-v2"
-    embedding_model = HuggingFaceEmbeddings(model_name=model_name)
+    HF_API = os.getenv("HUGGINGFACE_API")
+    index = "syn-net"
 
-    vector_db = Chroma(
-        persist_directory="chroma_db/chroma_db_mpnet",
-        embedding_function=embedding_model,
-        collection_name="portfolio_collection"
-    )
+    embedding_model = HuggingFaceEndpointEmbeddings(task="feature-extraction",
+                                                    huggingfacehub_api_token=HF_API, model=model_name)
+
+    vector_db = PineconeVectorStore(
+        index_name=index, embedding=embedding_model, pinecone_api_key=PINECONE_API)
+
+    # vector_db = Chroma(
+    #     persist_directory="chroma_db/chroma_db_mpnet",
+    #     embedding_function=embedding_model,
+    #     collection_name="portfolio_collection"
+    # )
 
     chat_model = ChatGoogleGenerativeAI(
         model="gemini-2.5-flash", temperature=0, google_api_key=os.getenv("GOOGLE_API_KEY")
